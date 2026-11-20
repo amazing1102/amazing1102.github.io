@@ -1,0 +1,32 @@
+---
+layout: base
+---
+<main>
+  <div class="shell"><div class="cover" role="img" aria-label="采光明亮的工作桌"></div></div>
+  <div class="shell page-grid">
+    <aside class="profile">
+      <img class="avatar" src="assets/avatar.png" alt="amazing1102 的 GitHub 头像" width="88" height="88">
+      <h1>cloverneo</h1><a class="handle" href="https://github.com/amazing1102">@amazing1102 ↗</a>
+      <p>把学到的东西写下来，也给日常留一点位置。</p>
+      <div class="profile-links"><a href="#notes">学习与日常 <span>↓</span></a><a href="#projects">我的项目 <span>↓</span></a></div>
+    </aside>
+    <div class="feed">
+      <section id="notes">
+        <div class="heading"><h2>最近记录</h2><div class="filters" aria-label="按栏目筛选">
+          <button type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button type="button" data-filter="learn" aria-pressed="false">学习</button>
+          <button type="button" data-filter="life" aria-pressed="false">日常</button>
+        </div></div>
+        <div class="entries">{% for post in site.posts %}
+          <article class="entry" data-category="{{ post.category | escape }}">
+            <div class="meta"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time><span class="category {{ post.category | escape }}">{% if post.category == 'life' %}日常{% else %}学习{% endif %}</span></div>
+            <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3><p>{{ post.summary | escape }}</p>
+          </article>{% endfor %}
+        </div><p id="empty" hidden>这个栏目还没有记录。</p>
+      </section>
+      <section id="projects"><div class="heading"><h2>我的项目</h2></div>
+        <a class="project" href="https://github.com/amazing1102/amazing1102.github.io"><div><strong>cloverneo.com</strong><p>个人主页 · 网站源码与 Markdown 文章</p></div><span aria-hidden="true">↗</span></a>
+      </section>
+    </div>
+  </div>
+</main>

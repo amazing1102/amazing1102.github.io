@@ -1,0 +1,18 @@
+title: cloverneo
+url: https://cloverneo.com
+timezone: Asia/Shanghai
+permalink: /notes/:year/:month/:day/:title/
+future: false
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      category: learn
+exclude:
+  - README.md
+  - index.md
+  - writing.html
+  - assets/marked.umd.js
+  - assets/marked-LICENSE.md

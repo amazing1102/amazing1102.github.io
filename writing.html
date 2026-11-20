@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写手记 · cloverneo</title><link rel="stylesheet" href="styles.css">
+<style>
+label {display:block;margin:14px 0;font-weight:600}
+input,select,textarea {display:block;width:100%;padding:8px;border-radius:4px;background:var(--panel);border:1px solid var(--line)}
+textarea {min-height:220px;resize:vertical}
+button {padding:8px 15px;background:var(--accent);color:white;border:0;border-radius:5px}
+iframe {border:1px solid var(--line);width:100%;background:white;min-height:230px}
+summary {cursor:pointer;margin:15px 0}
+</style><script src="assets/marked.umd.js"></script></head><body>
+<main class="reader"><h1>写手记</h1><form id="draft">
+<label>标题<input name="title" required></label>
+<label>栏目<select name="category"><option value="learn">学习</option><option value="life">日常</option></select></label>
+<label>摘要<input name="summary" required></label>
+<label>正文<textarea name="body" required></textarea></label>
+<details><summary>预览正文</summary><iframe sandbox title="文章预览"></iframe></details>
+<button type="submit">导出 Markdown</button> <a href="https://github.com/amazing1102/amazing1102.github.io/upload/main/_posts">上传到 GitHub ↗</a>
+<p role="status" id="status"></p></form></main>
+<script>
+const draft = document.querySelector('#draft');
+const message = document.querySelector('#status');
+const draftKey = 'cloverneo-writing-v1';
+const frame = document.querySelector('iframe');
+const fields = draft.elements;
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(draftKey)) || {}; } catch {}
+for (const key of ['title','category','summary','body']) {
+  if (saved[key]) fields.namedItem(key).value = saved[key];
+}
+function preview() {
+  const policy = '<meta http-equiv="Content-Security-Policy" content="default-src &apos;none&apos;; img-src https: data:; style-src &apos;unsafe-inline&apos;">';
+  frame.srcdoc = policy + '<meta charset="UTF-8"><style>body{font:16px/1.8 sans-serif;overflow-wrap:anywhere}img{max-width:100%}pre{overflow:auto}</style>' + marked.parse(fields.body.value);
+}
+document.querySelector('details').addEventListener('toggle', preview);
+draft.addEventListener('input', () => {
+  try {
+    localStorage.setItem(draftKey, JSON.stringify(Object.fromEntries(new FormData(draft))));
+    message.textContent = '草稿已保存在此浏览器。';
+  } catch { message.textContent = '浏览器无法保存草稿，请导出文件。'; }
+  if (document.querySelector('details').open) preview();
+});
+draft.addEventListener('submit', event => {
+  event.preventDefault();
+  const {title, category, summary, body} = Object.fromEntries(new FormData(draft));
+  const date = new Intl.DateTimeFormat('sv-SE', {timeZone:'Asia/Shanghai'}).format(new Date());
+  const slug = title.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0,48) || 'note';
+  const content = ['---', 'title: ' + JSON.stringify(title), 'category: ' + category, 'summary: ' + JSON.stringify(summary), 'date: ' + date + ' 00:00:00 +0800', '---', '', body, ''].join('\n');
+  const url = URL.createObjectURL(new Blob([content], {type:'text/markdown;charset=utf-8'}));
+  const download = document.createElement('a');
+  download.href = url; download.download = date + '-' + slug + '.md'; download.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+  message.textContent = '已导出，可上传到仓库的 _posts 目录。';
+});
+</script></body></html>
