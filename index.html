@@ -11,6 +11,23 @@ layout: base
       <div class="profile-links"><a href="#notes">学习与日常 <span>↓</span></a><a href="#projects">我的项目 <span>↓</span></a></div>
     </aside>
     <div class="feed">
+      <section id="activity" aria-labelledby="activity-heading">
+        <div class="heading"><h2 id="activity-heading">GitHub 贡献日历</h2><a class="handle" href="https://github.com/amazing1102">查看 GitHub ↗</a></div>
+        <div class="calendar-layout">
+          <div class="calendar-panel">
+            <strong id="activity-total"></strong>
+            <div class="calendar-body">
+              <div class="weekdays" aria-hidden="true"><span>周一</span><span>周三</span><span>周五</span></div>
+              <div class="calendar-scroll"><div id="activity-grid" aria-label="每日贡献"></div></div>
+            </div>
+            <div class="calendar-footer"><output id="activity-detail"></output><span class="scale" aria-label="贡献从少到多">少 <i></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i> 多</span></div>
+          </div>
+          <div id="activity-years" aria-label="统计时段"></div>
+        </div>
+        <noscript><a href="https://github.com/amazing1102">在 GitHub 查看贡献记录</a></noscript>
+      </section>
+      <script type="application/json" id="activity-snapshot">{{ site.data.github_activity | jsonify }}</script>
+      <script defer src="{{ '/activity.js' | relative_url }}"></script>
       <section id="notes">
         <div class="heading"><h2>最近记录</h2><div class="filters" aria-label="按栏目筛选">
           <button type="button" data-filter="all" aria-pressed="true">全部</button>

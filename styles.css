@@ -49,6 +49,31 @@ nav {gap:24px;margin-left:auto;font-size:14px}
 .profile-links a {display:flex;justify-content:space-between;font-size:14px;padding:11px 0;border-bottom:1px solid var(--line)}
 .profile-links span {color:var(--accent)}
 .feed {padding-top:32px}
+#activity {margin-bottom:30px;--day0:#e8ede9;--day1:#a6dcb1;--day2:#63bc82;--day3:#33895a;--day4:#16573a}
+.dark #activity {--day0:#303c35;--day1:#205a37;--day2:#297c45;--day3:#3eab60;--day4:#73dc86}
+.calendar-layout {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-top:16px}
+.calendar-panel {min-width:0;border:1px solid var(--line);border-radius:7px;padding:12px;background:var(--panel);font-size:13px}
+.calendar-body {display:flex;gap:5px;margin:10px 0 6px}
+.weekdays,#activity-grid {display:grid;grid-template-rows:16px repeat(7,10px);row-gap:3px}
+.weekdays {flex:none;color:var(--sub);font-size:10px;line-height:10px}
+.weekdays span:nth-child(1) {grid-row:3}
+.weekdays span:nth-child(2) {grid-row:5}
+.weekdays span:nth-child(3) {grid-row:7}
+.calendar-scroll {min-width:0;overflow-x:auto;scrollbar-width:thin;padding:0 1px 4px}
+#activity-grid {grid-auto-columns:10px;column-gap:3px;width:max-content;padding-right:1px}
+.month {align-self:start;font-size:10px;line-height:14px;white-space:nowrap;color:var(--sub)}
+.day,.scale i {display:block;width:10px;height:10px;padding:0;background:var(--day0);border:0;border-radius:2px}
+#activity [data-level="1"] {background:var(--day1)}
+#activity [data-level="2"] {background:var(--day2)}
+#activity [data-level="3"] {background:var(--day3)}
+#activity [data-level="4"] {background:var(--day4)}
+.day:focus-visible {outline-offset:0;outline-width:2px;z-index:1}
+.calendar-footer,.scale {display:flex;gap:4px;align-items:center}
+.calendar-footer {justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--sub);font-size:11px}
+#activity-years {display:flex;flex-direction:column;gap:3px;align-self:start}
+#activity-years button {border:0;background:transparent;color:var(--sub);border-radius:4px;padding:5px 10px;font-size:12px}
+#activity-years button[aria-pressed=true] {background:var(--accent);color:var(--paper);font-weight:700}
+@media(max-width:740px){.calendar-layout {display:flex;flex-direction:column}.calendar-panel {order:1}#activity-years {flex-direction:row}}
 .heading {justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:2px solid var(--ink)}
 h2 {margin:0;font-size:22px;line-height:1.45}
 .filters {gap:3px}
