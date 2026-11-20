@@ -1,1 +1,0 @@
-# amazing1102.github.io
