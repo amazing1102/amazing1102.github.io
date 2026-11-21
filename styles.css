@@ -92,6 +92,40 @@ h2 {margin:0;font-size:22px;line-height:1.45}
 .project>span {color:var(--accent);font-size:23px}
 footer {border-top:1px solid var(--line);justify-content:space-between;padding:20px 0 30px}
 .reader {width:min(680px,calc(100% - 40px));margin:42px auto 72px}
+.admin {padding:54px 0 76px}
+.admin-title {display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:24px}
+.admin-title h1 {margin:0;font-size:38px;line-height:1.2}
+.admin-title .eyebrow {margin:0 0 7px;color:var(--accent);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.08em}
+.admin-lead {margin:9px 0 0;color:var(--sub);font-size:14px}
+.admin-lock {font-size:44px;color:var(--accent);line-height:1}
+.admin-panel {margin-top:20px;padding:24px;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
+.admin-panel-heading {display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:19px}
+.admin-panel h2 {font-size:20px}
+.admin-panel-heading p {margin:3px 0 0;color:var(--sub);font-size:13px}
+.connection-dot {width:9px;height:9px;margin-top:8px;border-radius:50%;background:#b8c1bc;box-shadow:0 0 0 4px color-mix(in srgb, #b8c1bc 22%, transparent)}
+.connection-dot[data-connected="true"] {background:#32a25b;box-shadow:0 0 0 4px color-mix(in srgb, #32a25b 22%, transparent)}
+.admin-panel label {display:block;margin:14px 0 6px;font-weight:600;font-size:13px}
+.field-note {color:var(--sub);font-weight:400}
+.admin-panel input,.admin-panel textarea,.admin-panel select {display:block;width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:5px;background:var(--paper);font-size:14px}
+.admin-panel input:focus,.admin-panel textarea:focus,.admin-panel select:focus {outline:2px solid var(--accent);outline-offset:1px}
+.admin-panel textarea {min-height:260px;resize:vertical;line-height:1.7}
+.form-grid {display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:16px}
+.admin-actions {display:flex;align-items:center;gap:15px;margin-top:17px}
+.admin-actions a {font-size:13px;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.admin-button,.quiet-button,.danger-button {border-radius:5px;padding:8px 14px;border:1px solid var(--line);font-size:13px}
+.admin-button {background:var(--accent);border-color:var(--accent);color:var(--paper);font-weight:700}
+.admin-button:disabled,.danger-button:disabled {opacity:.55;cursor:wait}
+.quiet-button {background:transparent;color:var(--sub)}
+.quiet-button:hover {border-color:var(--accent);color:var(--accent)}
+.danger-button {background:transparent;color:#b14444;border-color:#e4c8c8}
+.danger-button:hover {background:#fff2f2}
+.admin-help,.admin-status {margin:13px 0 0;color:var(--sub);font-size:12px}
+.admin-status[data-type="error"] {color:#ad4242}.admin-status[data-type="success"] {color:var(--accent)}
+.post-list {border-top:1px solid var(--line)}
+.admin-post {display:grid;grid-template-columns:minmax(0,1fr) 110px auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.admin-post strong {font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-post time {font:12px Consolas,monospace;color:var(--sub)}
+@media(max-width:740px){.admin {padding-top:34px}.admin-title h1 {font-size:31px}.admin-panel {padding:18px}.form-grid {grid-template-columns:1fr}.admin-post {grid-template-columns:minmax(0,1fr) auto}.admin-post time {display:none}}
 .reader .meta {margin-top:30px}
 .reader h1 {margin:12px 0 4px;font-size:34px;line-height:1.42;overflow-wrap:anywhere}
 .byline {margin:0 0 26px}

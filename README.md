@@ -8,6 +8,10 @@ amazing1102 的个人主页。GitHub Pages 从 main 分支的根目录构建 Jek
 
 也可以直接在 [文章目录](https://github.com/amazing1102/amazing1102.github.io/tree/main/_posts) 中新增 `YYYY-MM-DD-slug.md`，参考已有文章的文件头。更新旧文时直接编辑原文件。栏目值为 `learn` 或 `life`。照片可上传到 `assets`，在正文用 Markdown 引用，如 `![照片的说明](/assets/photo.jpg)`。
 
+## 管理文章
+
+打开 `https://cloverneo.com/admin.html`，输入 GitHub Fine-grained Token 后，可以直接发布和删除文章。创建 Token 时只选择 `amazing1102/amazing1102.github.io` 这个仓库，并只授予 `Contents: Read and write` 权限。管理页使用 `noindex`，Token 只保存在当前浏览器标签页的 `sessionStorage`，关闭标签页后会清除。不要把 Token 写进文章、截图或提交到仓库。
+
 ## 改主页
 
 首页简介和项目位于 `index.html`。布局位于 `_layouts`，公共样式位于 `styles.css`。资料头像取自 GitHub 账号 amazing1102，封面是 [Unsplash 工作桌照片](https://images.unsplash.com/photo-1497215728101-856f4ea42174)，均可替换为自己的图片。最初三篇文章是本站的开站文稿。
