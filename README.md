@@ -4,7 +4,7 @@ amazing1102 的个人主页。GitHub Pages 从 main 分支的根目录构建 Jek
 
 ## 写文章
 
-打开 `https://cloverneo.com/admin.html` 并连接 GitHub，即可直接发布和删除文章。正文支持 Markdown 和 Mermaid，使用三个反引号加 `mermaid` 声明图表代码块。也可以在本机打开 `writing.html`，导出 Markdown 后手动上传到 `_posts`。
+打开 `https://cloverneo.com/#admin` 并连接 GitHub，即可直接发布和删除文章。正文支持 Markdown 和 Mermaid，使用三个反引号加 `mermaid` 声明图表代码块。也可以在本机打开 `writing.html`，导出 Markdown 后手动上传到 `_posts`。
 
 例如：
 
@@ -17,7 +17,7 @@ graph TD
 
 ## 管理文章
 
-打开 `https://cloverneo.com/admin.html`，输入 GitHub Fine-grained Token 后，可以直接发布和删除文章。创建 Token 时只选择 `amazing1102/amazing1102.github.io` 这个仓库，并只授予 `Contents: Read and write` 权限。管理页使用 `noindex`，Token 只保存在当前浏览器标签页的 `sessionStorage`，关闭标签页后会清除。不要把 Token 写进文章、截图或提交到仓库。
+打开 `https://cloverneo.com/#admin`，输入 GitHub Fine-grained Token 后，可以直接发布和删除文章。创建 Token 时只选择 `amazing1102/amazing1102.github.io` 这个仓库，并只授予 `Contents: Read and write` 权限。主页「最近记录」旁的「管理文章」可以展开或收起面板。Token 只保存在当前浏览器标签页的 `sessionStorage`，关闭标签页后会清除。不要把 Token 写进文章、截图或提交到仓库。
 
 ## 改主页
 

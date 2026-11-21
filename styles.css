@@ -92,12 +92,10 @@ h2 {margin:0;font-size:22px;line-height:1.45}
 .project>span {color:var(--accent);font-size:23px}
 footer {border-top:1px solid var(--line);justify-content:space-between;padding:20px 0 30px}
 .reader {width:min(680px,calc(100% - 40px));margin:42px auto 72px}
-.admin {padding:54px 0 76px}
-.admin-title {display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:24px}
-.admin-title h1 {margin:0;font-size:38px;line-height:1.2}
-.admin-title .eyebrow {margin:0 0 7px;color:var(--accent);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.08em}
-.admin-lead {margin:9px 0 0;color:var(--sub);font-size:14px}
-.admin-lock {font-size:44px;color:var(--accent);line-height:1}
+.notes-heading {flex-wrap:wrap}
+.manage-link {margin-right:auto;color:var(--accent);font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px}
+.manage-link[aria-expanded=true] {background:var(--tint)}
+#admin {margin-bottom:20px}
 .admin-panel {margin-top:20px;padding:24px;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
 .admin-panel-heading {display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:19px}
 .admin-panel h2 {font-size:20px}
@@ -125,7 +123,7 @@ footer {border-top:1px solid var(--line);justify-content:space-between;padding:2
 .admin-post {display:grid;grid-template-columns:minmax(0,1fr) 110px auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .admin-post strong {font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admin-post time {font:12px Consolas,monospace;color:var(--sub)}
-@media(max-width:740px){.admin {padding-top:34px}.admin-title h1 {font-size:31px}.admin-panel {padding:18px}.form-grid {grid-template-columns:1fr}.admin-post {grid-template-columns:minmax(0,1fr) auto}.admin-post time {display:none}}
+@media(max-width:740px){.admin-panel {padding:18px}.form-grid {grid-template-columns:1fr}.admin-post {grid-template-columns:minmax(0,1fr) auto}.admin-post time {display:none}}
 .reader .meta {margin-top:30px}
 .reader h1 {margin:12px 0 4px;font-size:34px;line-height:1.42;overflow-wrap:anywhere}
 .byline {margin:0 0 26px}

@@ -5,29 +5,6 @@ const POSTS_PATH = '_posts';
 const API_ROOT = `https://api.github.com/repos/${OWNER}/${REPO}`;
 const TOKEN_KEY = 'cloverneo-admin-token';
 
-const root = document.documentElement;
-const themeButton = document.querySelector('#theme');
-const themeIcon = themeButton.querySelector('img');
-const moonIcon = themeIcon.src;
-const sunIcon = new URL('sun.svg', moonIcon).href;
-
-function showTheme(dark) {
-  root.classList.toggle('dark', dark);
-  themeIcon.src = dark ? sunIcon : moonIcon;
-  const label = dark ? '切换浅色模式' : '切换深色模式';
-  themeButton.setAttribute('aria-label', label);
-  themeButton.title = label;
-}
-
-let storedTheme;
-try { storedTheme = localStorage.getItem('cloverneo-theme'); } catch {}
-showTheme(storedTheme ? storedTheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
-themeButton.addEventListener('click', () => {
-  const dark = !root.classList.contains('dark');
-  showTheme(dark);
-  try { localStorage.setItem('cloverneo-theme', dark ? 'dark' : 'light'); } catch {}
-});
-
 const tokenInput = document.querySelector('#token');
 const connectButton = document.querySelector('#connect');
 const authStatus = document.querySelector('#auth-status');
@@ -52,6 +29,7 @@ async function github(path, options = {}) {
   const response = await fetch(`${API_ROOT}${path}`, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
   let payload = null;
   try { payload = await response.json(); } catch {}
+  if (response.status === 404 && path.startsWith('/contents/_posts?')) return [];
   if (!response.ok) throw new Error(payload?.message || `GitHub 请求失败（${response.status}）`);
   return payload;
 }
@@ -88,14 +66,15 @@ async function connect() {
   try {
     const repo = await github('');
     if (!repo.permissions?.push) throw new Error('这个 Token 没有此仓库的写入权限。');
-    sessionStorage.setItem(TOKEN_KEY, token);
+    try { sessionStorage.setItem(TOKEN_KEY, token); } catch {}
+    disconnectButton.hidden = false;
+    tokenInput.value = '';
     connectionDot.dataset.connected = 'true';
     workspace.hidden = false;
     setStatus(authStatus, `已连接 ${repo.full_name}`, 'success');
     await loadPosts();
   } catch (error) {
-    token = '';
-    connectionDot.dataset.connected = 'false';
+    disconnect();
     setStatus(authStatus, error.message, 'error');
   } finally { connectButton.disabled = false; }
 }
@@ -129,8 +108,8 @@ async function removePost(post, button) {
   setStatus(postsStatus, `正在删除 ${post.name}……`);
   try {
     await github(`/contents/${POSTS_PATH}/${encodeURIComponent(post.name)}`, { method: 'DELETE', body: JSON.stringify({ message: `Delete post ${post.name}`, sha: post.sha, branch: BRANCH }) });
-    setStatus(postsStatus, '文章已删除，Pages 正在重新构建。', 'success');
     await loadPosts();
+    if (postsStatus.dataset.type !== 'error') setStatus(postsStatus, '已删除，主页将在 Pages 构建后更新。', 'success');
   } catch (error) { button.disabled = false; setStatus(postsStatus, error.message, 'error'); }
 }
 
@@ -138,7 +117,7 @@ publishForm.addEventListener('submit', async event => {
   event.preventDefault();
   const values = Object.fromEntries(new FormData(publishForm));
   const filename = postFile(values.title);
-  const path = `${POSTS_PATH}/${filename}`;
+  const path = `${POSTS_PATH}/${encodeURIComponent(filename)}`;
   const content = frontMatter(values);
   const submit = publishForm.querySelector('[type="submit"]');
   submit.disabled = true; setStatus(publishStatus, '正在发布……');
@@ -156,7 +135,39 @@ document.querySelector('#refresh-posts').addEventListener('click', loadPosts);
 connectButton.addEventListener('click', connect);
 tokenInput.addEventListener('keydown', event => { if (event.key === 'Enter') connect(); });
 
-try {
-  const existing = sessionStorage.getItem(TOKEN_KEY);
-  if (existing) { tokenInput.value = existing; connect(); }
-} catch {}
+
+const panel = document.querySelector('#admin');
+const manageLink = document.querySelector('.manage-link');
+const disconnectButton = document.querySelector('#disconnect');
+
+function disconnect() {
+  token = '';
+  tokenInput.value = '';
+  try { sessionStorage.removeItem(TOKEN_KEY); } catch {}
+  connectionDot.dataset.connected = 'false';
+  workspace.hidden = true;
+  disconnectButton.hidden = true;
+  postList.replaceChildren();
+  setStatus(authStatus, '已退出管理。');
+}
+disconnectButton.addEventListener('click', disconnect);
+
+function syncPanel() {
+  const open = location.hash === '#admin';
+  panel.hidden = !open;
+  manageLink.setAttribute('aria-expanded', String(open));
+  manageLink.textContent = open ? '收起管理' : '管理文章';
+  manageLink.hash = open ? 'notes' : 'admin';
+  if (!open) return;
+
+  const secure = window.isSecureContext;
+  document.querySelector('#auth-panel').hidden = !secure;
+  document.querySelector('#secure-entry').hidden = secure;
+  if (secure && !token && !connectButton.disabled) {
+    try { tokenInput.value ||= sessionStorage.getItem(TOKEN_KEY) || ''; } catch {}
+    if (tokenInput.value) connect();
+  }
+  document.querySelector('#notes').scrollIntoView();
+}
+window.addEventListener('hashchange', syncPanel);
+syncPanel();

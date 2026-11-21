@@ -1,46 +1,7 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url=./#admin">
   <title>管理文章 · cloverneo</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="assets/avatar.png">
-  <script defer src="admin.js"></script>
-</head>
-<body id="top">
-  <header class="top"><div class="shell top-inner">
-    <a href="/" class="wordmark"><span class="mark" aria-hidden="true">✳</span> cloverneo</a>
-    <nav aria-label="管理导航"><a href="/">返回主页</a><button type="button" id="theme" aria-label="切换深色模式" title="切换深色模式"><img width="18" height="18" alt="" src="assets/moon.svg"></button></nav>
-  </div></header>
-  <main class="admin shell">
-    <div class="admin-title"><div><p class="eyebrow">/ private desk</p><h1>管理文章</h1><p class="admin-lead">在这里发布和删除你的学习笔记、日常记录。</p></div><span class="admin-lock" aria-hidden="true">⌁</span></div>
-
-    <section class="admin-panel" id="auth-panel" aria-labelledby="auth-heading">
-      <div class="admin-panel-heading"><div><h2 id="auth-heading">连接 GitHub</h2><p>使用一个只允许操作此仓库内容的 Fine-grained Token。</p></div><span class="connection-dot" id="connection-dot"></span></div>
-      <label for="token">GitHub Token</label>
-      <input id="token" type="password" autocomplete="off" placeholder="github_pat_...">
-      <div class="admin-actions"><button class="admin-button" id="connect" type="button">验证并连接</button><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">创建 Token ↗</a></div>
-      <p class="admin-help">Token 只保存在当前标签页，关闭标签页后会清除。创建时选择此仓库，并只勾选 <strong>Contents: Read and write</strong>。</p>
-      <p class="admin-status" id="auth-status" role="status"></p>
-    </section>
-
-    <div id="workspace" hidden>
-      <section class="admin-panel" aria-labelledby="publish-heading">
-        <div class="admin-panel-heading"><div><h2 id="publish-heading">发布新文章</h2><p>Markdown 正文会直接提交到 GitHub，Pages 构建完成后自动上线。</p></div></div>
-        <form id="publish-form">
-          <div class="form-grid"><label>标题<input name="title" required maxlength="90" placeholder="今天学会了什么？"></label><label>栏目<select name="category"><option value="learn">学习</option><option value="life">日常</option></select></label></div>
-          <label>摘要<input name="summary" required maxlength="180" placeholder="用一句话说明这篇记录。"></label>
-          <label>正文 <span class="field-note">支持 Markdown 与 Mermaid</span><textarea name="body" required placeholder="## 从一个具体的问题开始\n\n把今天的记录写下来……\n\n```mermaid\ngraph TD\n  A[开始] --> B[完成]\n```"></textarea></label>
-          <div class="admin-actions"><button class="admin-button" type="submit">发布文章</button><button class="quiet-button" id="clear-draft" type="button">清空</button></div>
-          <p class="admin-status" id="publish-status" role="status"></p>
-        </form>
-      </section>
-
-      <section class="admin-panel" aria-labelledby="posts-heading"><div class="admin-panel-heading"><div><h2 id="posts-heading">已发布文章</h2><p>删除操作会直接提交到仓库，无法从网站撤回。</p></div><button class="quiet-button" id="refresh-posts" type="button">刷新列表</button></div><div class="post-list" id="post-list"></div><p class="admin-status" id="posts-status" role="status"></p></section>
-    </div>
-  </main>
-  <footer class="shell"><span>© 2026 cloverneo</span><a href="#top">回到顶部 ↑</a></footer>
-</body>
-</html>
+</head><body><a href="./#admin">前往主页管理文章</a></body></html>

@@ -29,11 +29,15 @@ layout: base
       <script type="application/json" id="activity-snapshot">{{ site.data.github_activity | jsonify }}</script>
       <script defer src="{{ '/activity.js' | relative_url }}"></script>
       <section id="notes">
-        <div class="heading"><h2>最近记录</h2><div class="filters" aria-label="按栏目筛选">
+        <div class="heading notes-heading"><h2>最近记录</h2>
+          <a class="manage-link" href="#admin" aria-controls="admin" aria-expanded="false">管理文章</a>
+          <div class="filters" aria-label="按栏目筛选">
           <button type="button" data-filter="all" aria-pressed="true">全部</button>
           <button type="button" data-filter="learn" aria-pressed="false">学习</button>
           <button type="button" data-filter="life" aria-pressed="false">日常</button>
         </div></div>
+        {% include post-manager.html %}
+        <script type="module" src="{{ '/admin.js' | relative_url }}"></script>
         <div class="entries">{% for post in site.posts %}
           <article class="entry" data-category="{{ post.category | escape }}">
             <div class="meta"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time><span class="category {{ post.category | escape }}">{% if post.category == 'life' %}日常{% else %}学习{% endif %}</span></div>

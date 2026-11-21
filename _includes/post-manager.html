@@ -1,0 +1,29 @@
+<div id="admin" hidden aria-label="文章管理" role="region">
+  <div class="admin-panel" id="secure-entry" hidden>
+    <p>连接 GitHub 需要使用 HTTPS 主页。</p>
+    <div class="admin-actions"><a href="https://cloverneo.com/#admin">打开 HTTPS 主页</a><a href="https://github.com/amazing1102/amazing1102.github.io/tree/main/_posts">在 GitHub 管理文章 ↗</a></div>
+  </div>
+<section class="admin-panel" id="auth-panel" hidden aria-labelledby="auth-heading">
+      <div class="admin-panel-heading"><div><h2 id="auth-heading">连接 GitHub</h2><p>使用一个只允许操作此仓库内容的 Fine-grained Token。</p></div><span class="connection-dot" id="connection-dot"></span></div>
+      <label for="token">GitHub Token</label>
+      <input id="token" type="password" autocomplete="off" placeholder="github_pat_...">
+      <div class="admin-actions"><button class="admin-button" id="connect" type="button">验证并连接</button><button class="quiet-button" id="disconnect" type="button" hidden>退出管理</button><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">创建 Token ↗</a></div>
+      <p class="admin-help">Token 只保存在当前标签页，关闭标签页后会清除。创建时选择此仓库，并只勾选 <strong>Contents: Read and write</strong>。</p>
+      <p class="admin-status" id="auth-status" role="status"></p>
+    </section>
+
+    <div id="workspace" hidden>
+      <section class="admin-panel" aria-labelledby="publish-heading">
+        <div class="admin-panel-heading"><div><h2 id="publish-heading">发布新文章</h2><p>Markdown 正文会直接提交到 GitHub，Pages 构建完成后自动上线。</p></div></div>
+        <form id="publish-form">
+          <div class="form-grid"><label>标题<input name="title" required maxlength="90" placeholder="今天学会了什么？"></label><label>栏目<select name="category"><option value="learn">学习</option><option value="life">日常</option></select></label></div>
+          <label>摘要<input name="summary" required maxlength="180" placeholder="用一句话说明这篇记录。"></label>
+          <label>正文 <span class="field-note">支持 Markdown 与 Mermaid</span><textarea name="body" required placeholder="写下你的记录……"></textarea></label>
+          <div class="admin-actions"><button class="admin-button" type="submit">发布文章</button><button class="quiet-button" id="clear-draft" type="button">清空</button></div>
+          <p class="admin-status" id="publish-status" role="status"></p>
+        </form>
+      </section>
+
+      <section class="admin-panel" aria-labelledby="posts-heading"><div class="admin-panel-heading"><div><h2 id="posts-heading">已发布文章</h2><p>删除操作会直接提交到仓库，无法从网站撤回。</p></div><button class="quiet-button" id="refresh-posts" type="button">刷新列表</button></div><div class="post-list" id="post-list"></div><p class="admin-status" id="posts-status" role="status"></p></section>
+    </div>
+</div>
