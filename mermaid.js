@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const tables = document.querySelectorAll('.prose table');
+  for (const table of tables) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-scroll';
+    wrapper.tabIndex = 0;
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', '可横向滚动的表格');
+    table.before(wrapper);
+    wrapper.append(table);
+  }
+
   const blocks = document.querySelectorAll('.prose .language-mermaid pre code, .prose pre.language-mermaid code, .prose pre code.language-mermaid');
   for (const code of blocks) {
     const wrapper = code.closest('.highlighter-rouge') || code.closest('pre');
