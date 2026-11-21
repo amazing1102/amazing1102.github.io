@@ -134,6 +134,9 @@ footer {border-top:1px solid var(--line);justify-content:space-between;padding:2
 .prose img {max-width:100%;height:auto}
 .prose a,.back {color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .prose pre {padding:16px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.prose .mermaid-diagram {display:flex;justify-content:center;max-width:100%;margin:22px 0;padding:12px;overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.prose .mermaid-diagram svg {max-width:100%;height:auto}
+.prose .mermaid-diagram .label,.prose .mermaid-diagram .nodeLabel,.prose .mermaid-diagram .edgeLabel {font-family:"DM Sans","Microsoft YaHei","PingFang SC",sans-serif}
 .prose blockquote {border-left:3px solid var(--accent);padding-left:16px;margin-left:0}
 [hidden] {display:none!important}
 @media(max-width:740px){
@@ -154,4 +157,5 @@ footer {border-top:1px solid var(--line);justify-content:space-between;padding:2
   .filters button {padding:5px 9px}
   .entry h3 {font-size:19px}
   .reader h1 {font-size:28px}
+  .prose .mermaid-diagram {justify-content:flex-start;padding:8px}
 }

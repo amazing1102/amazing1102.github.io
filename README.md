@@ -4,7 +4,14 @@ amazing1102 的个人主页。GitHub Pages 从 main 分支的根目录构建 Jek
 
 ## 写文章
 
-在本机用浏览器打开 `writing.html`。填写标题、栏目、摘要和 Markdown 正文，展开预览后点击「导出 Markdown」。点击「上传到 GitHub」将导出的 .md 文件提交到 `_posts` 目录。Pages 构建后会自动更新首页和文章链接。草稿保存在当前浏览器，编辑台不随网站发布。
+打开 `https://cloverneo.com/admin.html` 并连接 GitHub，即可直接发布和删除文章。正文支持 Markdown 和 Mermaid，使用三个反引号加 `mermaid` 声明图表代码块。也可以在本机打开 `writing.html`，导出 Markdown 后手动上传到 `_posts`。
+
+例如：
+
+```mermaid
+graph TD
+  A[开始] --> B[完成]
+```
 
 也可以直接在 [文章目录](https://github.com/amazing1102/amazing1102.github.io/tree/main/_posts) 中新增 `YYYY-MM-DD-slug.md`，参考已有文章的文件头。更新旧文时直接编辑原文件。栏目值为 `learn` 或 `life`。照片可上传到 `assets`，在正文用 Markdown 引用，如 `![照片的说明](/assets/photo.jpg)`。
 

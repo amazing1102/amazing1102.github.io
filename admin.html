@@ -32,7 +32,7 @@
         <form id="publish-form">
           <div class="form-grid"><label>标题<input name="title" required maxlength="90" placeholder="今天学会了什么？"></label><label>栏目<select name="category"><option value="learn">学习</option><option value="life">日常</option></select></label></div>
           <label>摘要<input name="summary" required maxlength="180" placeholder="用一句话说明这篇记录。"></label>
-          <label>正文 <span class="field-note">支持 Markdown</span><textarea name="body" required placeholder="## 从一个具体的问题开始\n\n把今天的记录写下来……"></textarea></label>
+          <label>正文 <span class="field-note">支持 Markdown 与 Mermaid</span><textarea name="body" required placeholder="## 从一个具体的问题开始\n\n把今天的记录写下来……\n\n```mermaid\ngraph TD\n  A[开始] --> B[完成]\n```"></textarea></label>
           <div class="admin-actions"><button class="admin-button" type="submit">发布文章</button><button class="quiet-button" id="clear-draft" type="button">清空</button></div>
           <p class="admin-status" id="publish-status" role="status"></p>
         </form>
