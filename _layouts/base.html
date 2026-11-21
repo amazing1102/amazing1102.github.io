@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{{ page.summary | default: 'cloverneo 的学习笔记、个人项目和日常手记。' | escape }}">
+  <meta name="description" content="{{ page.summary | default: 'cloverneo 的学习笔记和日常手记。' | escape }}">
   <title>{{ page.title | default: '个人主页' | escape }} · cloverneo</title>
   <link rel="stylesheet" href="{{ '/styles.css' | relative_url }}">
   <link rel="icon" href="{{ '/assets/avatar.png' | relative_url }}">
@@ -9,7 +9,7 @@
 </head><body id="top">
   <header class="top"><div class="shell top-inner">
     <a href="{{ '/' | relative_url }}" class="wordmark"><span class="mark" aria-hidden="true">✳</span> cloverneo</a>
-    <nav aria-label="主导航"><a href="{{ '/#notes' | relative_url }}">记录</a><a href="{{ '/#projects' | relative_url }}">项目</a><a href="https://github.com/amazing1102">GitHub ↗</a></nav>
+    <nav aria-label="主导航"><a href="{{ '/#notes' | relative_url }}">学习与日常</a><a href="https://github.com/amazing1102">GitHub ↗</a></nav>
     <button type="button" id="theme" aria-label="切换深色模式" title="切换深色模式"><img width="18" height="18" alt="" src="{{ '/assets/moon.svg' | relative_url }}"></button>
   </div></header>
   {{ content }}

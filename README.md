@@ -1,10 +1,12 @@
 # cloverneo.com
 
-amazing1102 的个人主页。GitHub Pages 从 main 分支的根目录构建 Jekyll，访客可以阅读文章、按栏目筛选和浏览项目。
+amazing1102 的个人主页。GitHub Pages 从 main 分支的根目录构建 Jekyll，访客可以阅读文章和按栏目筛选。
 
 ## 写文章
 
-打开 `https://cloverneo.com/#admin` 并连接 GitHub，即可直接发布和删除文章。正文支持 Markdown 和 Mermaid，使用三个反引号加 `mermaid` 声明图表代码块。也可以在本机打开 `writing.html`，导出 Markdown 后手动上传到 `_posts`。
+打开主页「学习与日常」下方的「管理文章」并连接 GitHub，即可直接发布和删除文章。正文支持 Markdown 和 Mermaid，使用三个反引号加 `mermaid` 声明图表代码块。可以导入 Markdown、TXT 和 DOCX 文件，DOCX 会转换为 Markdown，文档内图片会上传到仓库。也可以从编辑器选取图片上传并插入正文。
+
+未发布文章会自动保存在当前浏览器的 IndexedDB，重新打开主页并展开管理面板时会恢复。点击清空可清除草稿。
 
 例如：
 
@@ -17,11 +19,11 @@ graph TD
 
 ## 管理文章
 
-打开 `https://cloverneo.com/#admin`，输入 GitHub Fine-grained Token 后，可以直接发布和删除文章。创建 Token 时只选择 `amazing1102/amazing1102.github.io` 这个仓库，并只授予 `Contents: Read and write` 权限。主页「最近记录」旁的「管理文章」可以展开或收起面板。Token 只保存在当前浏览器标签页的 `sessionStorage`，关闭标签页后会清除。不要把 Token 写进文章、截图或提交到仓库。
+输入 GitHub Fine-grained Token 后，可以直接发布和删除文章。创建 Token 时只选择 `amazing1102/amazing1102.github.io` 这个仓库，并只授予 `Contents: Read and write` 权限。Token 只保存在当前浏览器标签页的 `sessionStorage`，关闭标签页后会清除。不要把 Token 写进文章、截图或提交到仓库。
 
 ## 改主页
 
-首页简介和项目位于 `index.html`。布局位于 `_layouts`，公共样式位于 `styles.css`。资料头像取自 GitHub 账号 amazing1102，封面是 [Unsplash 工作桌照片](https://images.unsplash.com/photo-1497215728101-856f4ea42174)，均可替换为自己的图片。最初三篇文章是本站的开站文稿。
+首页简介和文章列表位于 `index.html`。布局位于 `_layouts`，公共样式位于 `styles.css`。资料头像取自 GitHub 账号 amazing1102，封面是 [Unsplash 工作桌照片](https://images.unsplash.com/photo-1497215728101-856f4ea42174)，均可替换为自己的图片。最初三篇文章是本站的开站文稿。
 
 ## 域名
 

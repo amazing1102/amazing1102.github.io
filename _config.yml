@@ -16,3 +16,6 @@ exclude:
   - writing.html
   - assets/marked.umd.js
   - assets/marked-LICENSE.md
+  - assets/mammoth-LICENSE
+  - assets/turndown-LICENSE
+  - assets/turndown-plugin-gfm-LICENSE
