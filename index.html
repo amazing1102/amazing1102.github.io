@@ -8,7 +8,10 @@ layout: base
       <img class="avatar" src="assets/avatar.png" alt="amazing1102 的 GitHub 头像" width="88" height="88">
       <h1>cloverneo</h1><a class="handle" href="https://github.com/amazing1102">@amazing1102 ↗</a>
       <p>把学到的东西写下来，也给日常留一点位置。</p>
-      <div class="profile-links"><a href="#notes">学习与日常 <span>↓</span></a></div>
+      <div class="profile-links">
+        <a href="#notes">学习与日常 <span>↓</span></a>
+        <a class="manage-link" href="#admin" aria-controls="admin" aria-expanded="false">管理文章</a>
+      </div>
     </aside>
     <div class="feed">
       <section id="activity" aria-labelledby="activity-heading">
@@ -41,7 +44,6 @@ layout: base
             <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3><p>{{ post.summary | escape }}</p>
           </article>{% endfor %}
         </div><p id="empty" hidden>这个栏目还没有记录。</p>
-        <a class="manage-link" href="#admin" aria-controls="admin" aria-expanded="false">管理文章</a>
         {% include post-manager.html %}
         <script type="module" src="{{ '/admin.js' | relative_url }}"></script>
       </section>
