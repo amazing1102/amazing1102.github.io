@@ -1,7 +1,7 @@
 ---
 layout: base
 ---
-<main class="reader">
+<main id="main" class="reader">
   <a class="back" href="{{ '/#notes' | relative_url }}">← 返回记录</a>
   <div class="meta"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y.%m.%d' }}</time><span class="category {{ page.category | escape }}">{% if page.category == 'life' %}日常{% else %}学习{% endif %}</span></div>
   <h1>{{ page.title | escape }}</h1><p class="byline">cloverneo</p>

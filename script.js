@@ -22,12 +22,20 @@ themeButton.addEventListener('click', () => {
 
 const filters = document.querySelectorAll('[data-filter]');
 const entries = Array.from(document.querySelectorAll('.entry'));
+const empty = document.querySelector('#empty');
+const postCount = document.querySelector('#post-count');
+
+function applyFilter(name) {
+  let visible = 0;
+  for (const filter of filters) filter.setAttribute('aria-pressed', String(filter.dataset.filter === name));
+  for (const entry of entries) {
+    const matched = name === 'all' || entry.dataset.category === name;
+    entry.hidden = !matched;
+    if (matched) visible += 1;
+  }
+  if (empty) empty.hidden = visible > 0;
+  if (postCount) postCount.textContent = `${visible} 篇`;
+}
 for (const button of filters) {
-  button.addEventListener('click', () => {
-    for (const filter of filters) filter.setAttribute('aria-pressed', String(filter === button));
-    for (const entry of entries) {
-      entry.hidden = button.dataset.filter !== 'all' && entry.dataset.category !== button.dataset.filter;
-    }
-    document.querySelector('#empty').hidden = entries.some(entry => !entry.hidden);
-  });
+  button.addEventListener('click', () => applyFilter(button.dataset.filter));
 }

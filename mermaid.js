@@ -29,25 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
       securityLevel: 'strict',
       theme: 'base',
       themeVariables: dark ? {
-        primaryColor: '#2a4134',
-        primaryBorderColor: '#a1dbb6',
-        primaryTextColor: '#f1f4f0',
-        lineColor: '#b4c1b9',
-        secondaryColor: '#202b27',
-        tertiaryColor: '#18201e',
-        mainBkg: '#202b27',
-        nodeBorder: '#a1dbb6',
-        textColor: '#f1f4f0'
+        primaryColor: '#23382c',
+        primaryBorderColor: '#94d6ad',
+        primaryTextColor: '#eef2ed',
+        lineColor: '#a7b7ad',
+        secondaryColor: '#1a2420',
+        tertiaryColor: '#131a17',
+        mainBkg: '#1a2420',
+        nodeBorder: '#94d6ad',
+        textColor: '#eef2ed'
       } : {
-        primaryColor: '#e3efe8',
-        primaryBorderColor: '#226549',
-        primaryTextColor: '#17221d',
-        lineColor: '#54645c',
+        primaryColor: '#e4efe7',
+        primaryBorderColor: '#1f6247',
+        primaryTextColor: '#16201b',
+        lineColor: '#56665d',
         secondaryColor: '#f1f5f1',
-        tertiaryColor: '#ffffff',
-        mainBkg: '#ffffff',
-        nodeBorder: '#226549',
-        textColor: '#17221d'
+        tertiaryColor: '#fffefa',
+        mainBkg: '#fffefa',
+        nodeBorder: '#1f6247',
+        textColor: '#16201b'
       }
     });
 

@@ -345,6 +345,7 @@ document.querySelector('#clear-draft').addEventListener('click', async () => {
   finally { publishForm.inert = false; }
 });
 document.querySelector('#refresh-posts').addEventListener('click', loadPosts);
+document.querySelector('#close-admin').addEventListener('click', () => { location.hash = '#notes'; });
 connectButton.addEventListener('click', connect);
 tokenInput.addEventListener('keydown', event => { if (event.key === 'Enter') connect(); });
 publishForm.addEventListener('input', event => {

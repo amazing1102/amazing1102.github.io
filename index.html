@@ -1,11 +1,11 @@
 ---
 layout: base
 ---
-<main>
+<main id="main">
   <div class="shell"><div class="cover" role="img" aria-label="采光明亮的工作桌"></div></div>
   <div class="shell page-grid">
     <aside class="profile">
-      <img class="avatar" src="assets/avatar.png" alt="amazing1102 的 GitHub 头像" width="88" height="88">
+      <img class="avatar" src="assets/avatar.png" alt="amazing1102 的 GitHub 头像" width="88" height="88" decoding="async">
       <h1>cloverneo</h1><a class="handle" href="https://github.com/amazing1102">@amazing1102 ↗</a>
       <p>把学到的东西写下来，也给日常留一点位置。</p>
       <div class="profile-links">
@@ -32,15 +32,16 @@ layout: base
       <script type="application/json" id="activity-snapshot">{{ site.data.github_activity | jsonify }}</script>
       <script defer src="{{ '/activity.js' | relative_url }}"></script>
       <section id="notes">
-        <div class="heading notes-heading"><h2>学习与日常</h2>
-          <div class="filters" aria-label="按栏目筛选">
+        <div class="heading notes-heading">
+          <div class="heading-text"><h2>学习与日常</h2><span class="count" id="post-count" aria-live="polite">{{ site.posts.size }} 篇</span></div>
+          <div class="filters" role="group" aria-label="按栏目筛选">
           <button type="button" data-filter="all" aria-pressed="true">全部</button>
           <button type="button" data-filter="learn" aria-pressed="false">学习</button>
           <button type="button" data-filter="life" aria-pressed="false">日常</button>
         </div></div>
         <div class="entries">{% for post in site.posts %}
           <article class="entry" data-category="{{ post.category | escape }}">
-            <div class="meta"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time><span class="category {{ post.category | escape }}">{% if post.category == 'life' %}日常{% else %}学习{% endif %}</span></div>
+            <div class="meta"><time datetime="{{ post.date | date_to_xmlschema }}"><span class="d">{{ post.date | date: '%d' }}</span><span class="ym">{{ post.date | date: '%Y.%m' }}</span></time><span class="category {{ post.category | escape }}">{% if post.category == 'life' %}日常{% else %}学习{% endif %}</span></div>
             <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3><p>{{ post.summary | escape }}</p>
           </article>{% endfor %}
         </div><p id="empty" hidden>这个栏目还没有记录。</p>

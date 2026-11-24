@@ -3,10 +3,20 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.summary | default: 'cloverneo 的学习笔记和日常手记。' | escape }}">
   <title>{{ page.title | default: '个人主页' | escape }} · cloverneo</title>
-  <link rel="stylesheet" href="{{ '/styles.css' | relative_url }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <meta name="author" content="cloverneo">
+  <meta property="og:site_name" content="cloverneo">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="{{ page.title | default: '个人主页' | escape }}">
+  <meta property="og:description" content="{{ page.summary | default: 'cloverneo 的学习笔记和日常手记。' | escape }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta name="theme-color" content="#f6f7f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131a17" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="{{ '/assets/avatar.png' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/styles.css' | relative_url }}">
   <script defer src="{{ '/script.js' | relative_url }}"></script>
 </head><body id="top">
+  <a class="skip-link" href="#main">跳到正文</a>
   <header class="top"><div class="shell top-inner">
     <a href="{{ '/' | relative_url }}" class="wordmark"><span class="mark" aria-hidden="true">✳</span> cloverneo</a>
     <nav aria-label="主导航"><a href="{{ '/#notes' | relative_url }}">学习与日常</a><a href="https://github.com/amazing1102">GitHub ↗</a></nav>
