@@ -27,6 +27,52 @@ let draftDb;
 let draftRevision = 0;
 let editorReady = false;
 let editorSelection = { start: 0, end: 0 };
+const sessionGroups = new Map();
+const groupOptions = document.querySelector('#group-options');
+const postPathsScript = document.querySelector('#post-paths');
+const postGroupsScript = document.querySelector('#post-groups');
+
+function readJsonArray(script) {
+  try {
+    const value = JSON.parse(script?.textContent || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch { return []; }
+}
+
+const listedGroups = ['未分组'];
+const buildPostGroups = new Map();
+{
+  const paths = readJsonArray(postPathsScript);
+  const groups = readJsonArray(postGroupsScript);
+  paths.forEach((path, index) => {
+    const name = String(path ?? '').split('/').pop();
+    if (!name) return;
+    const group = String(groups[index] ?? '').trim() || '未分组';
+    buildPostGroups.set(name, group);
+    if (!listedGroups.includes(group)) listedGroups.push(group);
+  });
+}
+
+function renderGroupOptions() {
+  if (!groupOptions) return;
+  groupOptions.replaceChildren(...listedGroups.map(group => {
+    const option = document.createElement('option');
+    option.value = group;
+    return option;
+  }));
+}
+
+function rememberGroup(value) {
+  const group = (value || '').trim();
+  if (!group || listedGroups.includes(group)) return;
+  listedGroups.push(group);
+  renderGroupOptions();
+}
+
+function groupFor(name) {
+  return sessionGroups.get(name) || buildPostGroups.get(name) || '未分组';
+}
+renderGroupOptions();
 
 function openDraftDb() {
   draftDb ??= new Promise((resolve, reject) => {
@@ -139,8 +185,12 @@ function postFile(title) {
   return `${today()}-${slugify(title)}.md`;
 }
 
-function frontMatter({ title, category, summary, body }) {
-  return ['---', `title: ${JSON.stringify(title)}`, `category: ${category}`, `summary: ${JSON.stringify(summary)}`, `date: ${today()} 12:00:00 +0800`, '---', '', body.trim(), ''].join('\n');
+function frontMatter({ title, category, summary, group, body }) {
+  const fields = [`title: ${JSON.stringify(title)}`, `category: ${category}`, `summary: ${JSON.stringify(summary)}`];
+  const trimmedGroup = (group || '').trim();
+  if (trimmedGroup) fields.push(`group: ${JSON.stringify(trimmedGroup)}`);
+  fields.push(`date: ${today()} 12:00:00 +0800`);
+  return ['---', ...fields, '---', '', body.trim(), ''].join('\n');
 }
 
 async function connect() {
@@ -180,14 +230,20 @@ async function loadPosts() {
     posts.forEach(post => {
       const row = document.createElement('div');
       row.className = 'admin-post';
+      const info = document.createElement('div');
+      info.className = 'post-main';
       const name = document.createElement('strong');
       name.textContent = post.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '').replace(/-/g, ' ');
+      const group = document.createElement('span');
+      group.className = 'group-chip';
+      group.textContent = groupFor(post.name);
+      info.append(name, group);
       const date = document.createElement('time');
       date.textContent = post.name.slice(0, 10);
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'danger-button'; button.textContent = '删除';
       button.addEventListener('click', () => removePost(post, button));
-      row.append(name, date, button); postList.append(row);
+      row.append(info, date, button); postList.append(row);
     });
     setStatus(postsStatus, `${posts.length} 篇文章`);
   } catch (error) { setStatus(postsStatus, error.message, 'error'); }
@@ -199,6 +255,7 @@ async function removePost(post, button) {
   setStatus(postsStatus, `正在删除 ${post.name}……`);
   try {
     await github(`/contents/${POSTS_PATH}/${encodeURIComponent(post.name)}`, { method: 'DELETE', body: JSON.stringify({ message: `Delete post ${post.name}`, sha: post.sha, branch: BRANCH }) });
+    sessionGroups.delete(post.name);
     await loadPosts();
     if (postsStatus.dataset.type !== 'error') setStatus(postsStatus, '已删除，主页将在 Pages 构建后更新。', 'success');
   } catch (error) { button.disabled = false; setStatus(postsStatus, error.message, 'error'); }
@@ -298,7 +355,7 @@ async function importDocument(file) {
     const metadata = {};
     const fields = extension !== 'txt' && markdown.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
     if (fields) {
-      for (const match of fields[1].matchAll(/^(title|category|summary):[ \t]*(.+)$/gm)) {
+      for (const match of fields[1].matchAll(/^(title|category|summary|group):[ \t]*(.+)$/gm)) {
         const value = match[2].trim();
         try { metadata[match[1]] = JSON.parse(value); }
         catch { metadata[match[1]] = value.replace(/^'(.*)'$/, '$1'); }
@@ -309,6 +366,7 @@ async function importDocument(file) {
     form.title.value = metadata.title || form.title.value || file.name.replace(/\.[^.]+$/, '');
     if (['learn', 'life'].includes(metadata.category)) form.category.value = metadata.category;
     if (typeof metadata.summary === 'string') form.summary.value = metadata.summary;
+    if (typeof metadata.group === 'string') form.group.value = metadata.group;
     bodyField.value = markdown;
     bodyField.setSelectionRange(markdown.length, markdown.length);
     rememberEditorSelection();
@@ -330,6 +388,9 @@ publishForm.addEventListener('submit', async event => {
   submit.disabled = true; setStatus(publishStatus, '正在发布……');
   try {
     await github(`/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message: `Publish post ${values.title}`, content: encodeBase64(content), branch: BRANCH }) });
+    const group = (values.group || '').trim();
+    sessionGroups.set(filename, group || '未分组');
+    rememberGroup(group);
     await clearDraft().catch(() => { draftState.textContent = '已发布，本地草稿清除失败'; });
     setStatus(publishStatus, `已发布 ${filename}，Pages 正在重新构建。`, 'success');
     await loadPosts();

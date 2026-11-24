@@ -19,6 +19,7 @@
         <form id="publish-form">
           <div class="form-grid"><label>标题<input name="title" required maxlength="90" placeholder="今天学会了什么？"></label><label>栏目<select name="category"><option value="learn">学习</option><option value="life">日常</option></select></label></div>
           <label>摘要<input name="summary" required maxlength="180" placeholder="用一句话说明这篇记录。"></label>
+          <div class="group-row"><label>分组 <span class="field-note">可选，输入新名称即可创建分组</span><input name="group" list="group-options" maxlength="40" autocomplete="off" placeholder="例如：A组（留空即为未分组）"></label><datalist id="group-options"></datalist></div>
           <div class="editor-toolbar"><input id="import-file" type="file" accept=".md,.markdown,.txt,.docx,text/markdown,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><label class="import-button" for="import-file">导入文档</label><input id="image-file" type="file" accept="image/*"><label class="import-button" for="image-file">插入图片</label><span id="draft-state" role="status">草稿自动保存</span></div>
           <label>正文 <span class="field-note">支持 Markdown 与 Mermaid</span><textarea name="body" required placeholder="写下你的记录……"></textarea></label>
           <p class="admin-status" id="import-status" role="status"></p>

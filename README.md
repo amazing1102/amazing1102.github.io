@@ -6,6 +6,8 @@ amazing1102 的个人主页。GitHub Pages 从 main 分支的根目录构建 Jek
 
 打开主页「学习与日常」下方的「管理文章」并连接 GitHub，即可直接发布和删除文章。正文支持 Markdown 和 Mermaid，使用三个反引号加 `mermaid` 声明图表代码块。可以导入 Markdown、TXT 和 DOCX 文件，DOCX 会转换为 Markdown，文档内图片会上传到仓库。也可以从编辑器选取图片上传并插入正文。
 
+发布时可以在「分组」一栏填写名称，例如 `A组`；第一次用这个名称发布即创建分组，之后它会出现在下拉选项里，同一个分组可以发布多篇。首页按分组分区展示文章，左栏有分组索引；不填分组即为「未分组」。分组不会单独建文件，名称直接写在文章的文件头 `group` 字段里。
+
 未发布文章会自动保存在当前浏览器的 IndexedDB，重新打开主页并展开管理面板时会恢复。点击清空可清除草稿。
 
 例如：
@@ -15,7 +17,7 @@ graph TD
   A[开始] --> B[完成]
 ```
 
-也可以直接在 [文章目录](https://github.com/amazing1102/amazing1102.github.io/tree/main/_posts) 中新增 `YYYY-MM-DD-slug.md`，参考已有文章的文件头。更新旧文时直接编辑原文件。栏目值为 `learn` 或 `life`。照片可上传到 `assets`，在正文用 Markdown 引用，如 `![照片的说明](/assets/photo.jpg)`。
+也可以直接在 [文章目录](https://github.com/amazing1102/amazing1102.github.io/tree/main/_posts) 中新增 `YYYY-MM-DD-slug.md`，参考已有文章的文件头。更新旧文时直接编辑原文件。栏目值为 `learn` 或 `life`；分组写在 `group` 字段（例如 `group: "A组"`），省略即为「未分组」。照片可上传到 `assets`，在正文用 Markdown 引用，如 `![照片的说明](/assets/photo.jpg)`。
 
 ## 管理文章
 

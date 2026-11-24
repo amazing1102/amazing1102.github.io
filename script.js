@@ -22,6 +22,7 @@ themeButton.addEventListener('click', () => {
 
 const filters = document.querySelectorAll('[data-filter]');
 const entries = Array.from(document.querySelectorAll('.entry'));
+const groups = Array.from(document.querySelectorAll('.group'));
 const empty = document.querySelector('#empty');
 const postCount = document.querySelector('#post-count');
 
@@ -33,9 +34,13 @@ function applyFilter(name) {
     entry.hidden = !matched;
     if (matched) visible += 1;
   }
+  for (const group of groups) {
+    group.hidden = !group.querySelector('.entry:not([hidden])');
+  }
   if (empty) empty.hidden = visible > 0;
   if (postCount) postCount.textContent = `${visible} 篇`;
 }
 for (const button of filters) {
   button.addEventListener('click', () => applyFilter(button.dataset.filter));
 }
+if (empty) empty.hidden = entries.length > 0;

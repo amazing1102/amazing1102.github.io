@@ -85,6 +85,13 @@ nav a:hover::after {transform:scaleX(1)}
 .profile-links span {color:var(--accent);font-family:var(--mono);font-size:12px}
 .profile-links .manage-link {color:var(--accent-ink);font-weight:600}
 .manage-link[aria-expanded=true] {background:var(--tint);padding-left:8px}
+.profile-groups {display:block;margin-top:20px;margin-left:0;font-size:13.5px;gap:0}
+.profile-label {margin:0 0 6px;color:var(--sub);font-family:var(--mono);font-size:10px;letter-spacing:.12em}
+.profile-groups a {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);color:var(--sub);font-size:13.5px;transition:color .18s ease, padding-left .18s ease}
+.profile-groups a::after {display:none}
+.profile-groups a:last-child {border-bottom:0}
+.profile-groups a:hover {padding-left:7px;color:var(--accent);text-decoration:none}
+.profile-groups a span {color:var(--sub);font-family:var(--mono);font-size:10.5px}
 .feed {min-width:0;padding-top:30px}
 
 /* 贡献日历 */
@@ -147,6 +154,12 @@ nav a:hover::after {transform:scaleX(1)}
 .entry h3 a {display:inline;background-image:linear-gradient(var(--accent), var(--accent));background-repeat:no-repeat;background-position:0 100%;background-size:0 1px;transition:background-size .25s ease, color .18s ease}
 .entry h3 a:hover {color:var(--accent-ink);text-decoration:none;background-size:100% 1px}
 .entry p {grid-column:2;margin:6px 0 0;color:var(--sub);font-size:14px;line-height:1.7}
+.groups {margin-top:4px}
+.group {margin-top:28px;scroll-margin-top:96px}
+.group-heading {display:flex;align-items:center;gap:10px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.group-heading h3 {display:flex;align-items:center;gap:9px;margin:0;font-size:16px;line-height:1.5;letter-spacing:-.005em}
+.group-heading h3::before {content:"";flex:none;width:7px;height:7px;border:1.5px solid var(--accent);border-radius:1px}
+.group-heading .count {padding:1px 7px;font-size:10px}
 #empty {margin:0;padding:30px;border:1px dashed var(--line);border-radius:12px;color:var(--sub);font-size:14px;text-align:center}
 
 /* 文章管理 */
@@ -175,6 +188,8 @@ nav a:hover::after {transform:scaleX(1)}
 .editor-toolbar input[type="file"]:focus-visible+label {outline:3px solid var(--accent);outline-offset:3px}
 #draft-state {margin-left:auto;color:var(--sub);font-size:11px;font-family:var(--mono)}
 .form-grid {display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:16px}
+.group-row {max-width:360px}
+.group-row label {margin-top:14px}
 .admin-actions {display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin-top:17px}
 .admin-actions a {font-size:13px;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .admin-button,.quiet-button,.danger-button {border-radius:7px;padding:8px 15px;border:1px solid var(--line);font-size:13px;transition:background-color .18s ease, border-color .18s ease, color .18s ease}
@@ -193,12 +208,15 @@ nav a:hover::after {transform:scaleX(1)}
 .admin-status[data-type="success"] {color:var(--accent)}
 .post-list {border-top:1px solid var(--line)}
 .admin-post {display:grid;grid-template-columns:minmax(0,1fr) 110px auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.post-main {display:flex;min-width:0;flex-direction:column;gap:4px}
 .admin-post strong {overflow:hidden;font-size:14px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.group-chip {align-self:flex-start;padding:1px 7px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--sub);font-family:var(--mono);font-size:10px;letter-spacing:.04em}
 .admin-post time {color:var(--sub);font:12px var(--mono)}
 @media(max-width:740px){
   .admin-bar {padding-top:18px}
   .admin-panel {padding:18px;border-radius:10px}
   .form-grid {grid-template-columns:1fr}
+  .group-row {max-width:none}
   .admin-post {grid-template-columns:minmax(0,1fr) auto}
   .admin-post time {display:none}
   #draft-state {flex-basis:100%;margin-left:0}
@@ -259,6 +277,11 @@ footer a {font-family:var(--mono);font-size:12px}
   .profile-links a {padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:13.5px}
   .profile-links a:hover {padding-left:14px;border-color:var(--accent)}
   .manage-link[aria-expanded=true] {padding-left:14px}
+  .profile-groups {display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px;margin-top:16px}
+  .profile-label {grid-column:1 / -1;margin:0}
+  .profile-groups a {padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+  .profile-groups a:last-child {border-bottom:1px solid var(--line)}
+  .profile-groups a:hover {padding-left:12px;border-color:var(--accent)}
   .feed {padding-top:26px}
   .heading {gap:8px;padding-bottom:10px}
   .heading h2 {font-size:20px;gap:8px}
@@ -273,6 +296,8 @@ footer a {font-family:var(--mono);font-size:12px}
   .entry .meta .ym {margin-top:0}
   .entry h3 {font-size:19px;margin:0}
   .entry p {margin-top:5px;font-size:13.5px}
+  .group {margin-top:22px;scroll-margin-top:76px}
+  .group-heading h3 {font-size:15px}
   .reader {width:calc(100% - 36px);margin:30px auto 60px}
   .reader h1 {font-size:28px}
   .prose {font-size:16px;padding-top:20px}

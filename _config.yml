@@ -10,6 +10,7 @@ defaults:
     values:
       layout: post
       category: learn
+      group: 未分组
 exclude:
   - README.md
   - index.md
