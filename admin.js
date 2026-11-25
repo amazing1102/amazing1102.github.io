@@ -22,15 +22,25 @@ const imageFile = document.querySelector('#image-file');
 const importStatus = document.querySelector('#import-status');
 const draftState = document.querySelector('#draft-state');
 const bodyField = publishForm.elements.body;
+const publishHeading = document.querySelector('#publish-heading');
+const publishNote = document.querySelector('#publish-note');
+const publishSubmit = document.querySelector('#publish-submit');
+const editBar = document.querySelector('#edit-bar');
+const editTargetName = document.querySelector('#edit-target-name');
+const cancelEditButton = document.querySelector('#cancel-edit');
+const clearDraftButton = document.querySelector('#clear-draft');
 let token = '';
 let draftDb;
 let draftRevision = 0;
 let editorReady = false;
 let editorSelection = { start: 0, end: 0 };
+let editing = null;
 const sessionGroups = new Map();
+const sessionTitles = new Map();
 const groupOptions = document.querySelector('#group-options');
 const postPathsScript = document.querySelector('#post-paths');
 const postGroupsScript = document.querySelector('#post-groups');
+const postTitlesScript = document.querySelector('#post-titles');
 
 function readJsonArray(script) {
   try {
@@ -41,14 +51,18 @@ function readJsonArray(script) {
 
 const listedGroups = ['未分组'];
 const buildPostGroups = new Map();
+const buildPostTitles = new Map();
 {
   const paths = readJsonArray(postPathsScript);
   const groups = readJsonArray(postGroupsScript);
+  const titles = readJsonArray(postTitlesScript);
   paths.forEach((path, index) => {
     const name = String(path ?? '').split('/').pop();
     if (!name) return;
     const group = String(groups[index] ?? '').trim() || '未分组';
     buildPostGroups.set(name, group);
+    const title = String(titles[index] ?? '').trim();
+    if (title) buildPostTitles.set(name, title);
     if (!listedGroups.includes(group)) listedGroups.push(group);
   });
 }
@@ -113,6 +127,7 @@ async function restoreDraft() {
 }
 
 async function queueDraftSave() {
+  if (editing) return;
   const revision = ++draftRevision;
   draftState.textContent = '正在保存草稿…';
   try {
@@ -154,7 +169,11 @@ async function github(path, options = {}) {
   let payload = null;
   try { payload = await response.json(); } catch {}
   if (response.status === 404 && path.startsWith('/contents/_posts?')) return [];
-  if (!response.ok) throw new Error(payload?.message || `GitHub 请求失败（${response.status}）`);
+  if (!response.ok) {
+    const error = new Error(payload?.message || `GitHub 请求失败（${response.status}）`);
+    error.status = response.status;
+    throw error;
+  }
   return payload;
 }
 
@@ -186,11 +205,152 @@ function postFile(title) {
 }
 
 function frontMatter({ title, category, summary, group, body }) {
-  const fields = [`title: ${JSON.stringify(title)}`, `category: ${category}`, `summary: ${JSON.stringify(summary)}`];
+  const cleanTitle = String(title ?? '').trim();
+  const cleanSummary = String(summary ?? '').trim();
+  const fields = [`title: ${JSON.stringify(cleanTitle)}`, `category: ${category}`, `summary: ${JSON.stringify(cleanSummary)}`];
   const trimmedGroup = (group || '').trim();
   if (trimmedGroup) fields.push(`group: ${JSON.stringify(trimmedGroup)}`);
   fields.push(`date: ${today()} 12:00:00 +0800`);
   return ['---', ...fields, '---', '', body.trim(), ''].join('\n');
+}
+
+function decodeBase64(value) {
+  const binary = atob(String(value || '').replace(/\s+/g, ''));
+  return new TextDecoder().decode(Uint8Array.from(binary, character => character.charCodeAt(0)));
+}
+
+function splitFrontMatter(text) {
+  const source = String(text ?? '');
+  const match = source.match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
+  if (!match) return { lines: null, body: source };
+  return { lines: match[1].split(/\r?\n/), body: source.slice(match[0].length) };
+}
+
+function readFrontMatterValues(lines) {
+  const values = {};
+  for (const line of lines || []) {
+    const match = line.match(/^([A-Za-z0-9_-]+):[ \t]*(.*)$/);
+    if (!match) continue;
+    const raw = match[2].trim();
+    if (!raw) { values[match[1]] = ''; continue; }
+    try {
+      const parsed = JSON.parse(raw);
+      values[match[1]] = typeof parsed === 'string' ? parsed : raw;
+    } catch {
+      values[match[1]] = /^'(.*)'$/.test(raw) ? raw.slice(1, -1).replace(/''/g, "'") : raw;
+    }
+  }
+  return values;
+}
+
+function composeFrontMatter(lines, values) {
+  const managed = new Set(['title', 'category', 'summary', 'group']);
+  const preserved = [];
+  let skipContinuation = false;
+  for (const line of lines || []) {
+    const match = line.match(/^([A-Za-z0-9_-]+):/);
+    if (match) {
+      skipContinuation = managed.has(match[1]);
+      if (!skipContinuation && line.trim()) preserved.push(line);
+    } else if (/^\s+\S/.test(line)) {
+      if (!skipContinuation) preserved.push(line);
+    } else if (line.trim() && !line.trim().startsWith('#')) {
+      preserved.push(line);
+    }
+  }
+  const group = (values.group || '').trim();
+  const title = String(values.title ?? '').trim();
+  const summary = String(values.summary ?? '').trim();
+  const header = [
+    `title: ${JSON.stringify(title)}`,
+    `category: ${values.category}`,
+    `summary: ${JSON.stringify(summary)}`,
+    ...(group ? [`group: ${JSON.stringify(group)}`] : []),
+    ...preserved
+  ];
+  return ['---', ...header, '---', '', values.body.trim(), ''].join('\n');
+}
+
+function applyEditMode() {
+  publishHeading.textContent = '编辑文章';
+  publishNote.textContent = '修改会直接提交到 GitHub，文章地址和发布日期保持不变。';
+  publishSubmit.textContent = '保存修改';
+  editTargetName.textContent = editing.name;
+  editBar.hidden = false;
+  clearDraftButton.disabled = true;
+  draftState.textContent = '编辑已发布文章时不会写入本地草稿';
+  setStatus(publishStatus, '');
+  setStatus(importStatus, '');
+}
+
+function exitEditMode({ restore = true } = {}) {
+  editing = null;
+  editBar.hidden = true;
+  editTargetName.textContent = '';
+  publishHeading.textContent = '发布新文章';
+  publishNote.textContent = 'Markdown 正文会直接提交到 GitHub，Pages 构建完成后自动上线。';
+  publishSubmit.textContent = '发布文章';
+  clearDraftButton.disabled = false;
+  publishForm.reset();
+  editorSelection = { start: 0, end: 0 };
+  resizeBody();
+  draftState.textContent = '草稿自动保存';
+  setStatus(importStatus, '');
+  setStatus(publishStatus, '');
+  if (!restore) return;
+  restoreDraft().then(() => { editorReady = true; }).catch(() => { draftState.textContent = '当前浏览器无法读取本地草稿'; });
+}
+
+async function startEdit(post) {
+  if (!post?.name) return;
+  if (editing && !window.confirm('正在编辑另一篇文章，切换会丢弃当前修改。继续吗？')) return;
+  const current = Object.fromEntries(new FormData(publishForm));
+  const hasContent = ['title', 'summary', 'group', 'body'].some(name => String(current[name] ?? '').trim());
+  if (hasContent && !window.confirm('打开编辑会替换表单里未发布的内容（浏览器草稿仍会保留）。继续吗？')) return;
+  setStatus(postsStatus, `正在读取 ${post.name}……`);
+  let file;
+  try {
+    file = await github(`/contents/${POSTS_PATH}/${encodeURIComponent(post.name)}?ref=${BRANCH}`);
+  } catch (error) { setStatus(postsStatus, error.message, 'error'); return; }
+  const { lines, body } = splitFrontMatter(decodeBase64(file.content));
+  const values = readFrontMatterValues(lines);
+  const form = publishForm.elements;
+  form.title.value = values.title || post.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
+  form.category.value = ['learn', 'life'].includes(values.category) ? values.category : 'learn';
+  form.summary.value = values.summary || '';
+  form.group.value = values.group || '';
+  bodyField.value = body.trim();
+  bodyField.setSelectionRange(bodyField.value.length, bodyField.value.length);
+  rememberEditorSelection();
+  resizeBody();
+  editing = { name: post.name, sha: file.sha, lines };
+  applyEditMode();
+  editBar.scrollIntoView({ block: 'nearest' });
+  setStatus(postsStatus, `正在编辑 ${post.name}`);
+}
+
+async function saveEdit(values) {
+  const target = editing;
+  if (!target) return;
+  const content = composeFrontMatter(target.lines, values);
+  const path = `${POSTS_PATH}/${encodeURIComponent(target.name)}`;
+  publishForm.inert = true;
+  publishSubmit.disabled = true;
+  setStatus(publishStatus, '正在保存修改……');
+  try {
+    await github(`/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message: `Update post ${values.title}`, content: encodeBase64(content), branch: BRANCH, sha: target.sha }) });
+    const group = (values.group || '').trim();
+    sessionGroups.set(target.name, group || '未分组');
+    sessionTitles.set(target.name, values.title);
+    rememberGroup(group);
+    exitEditMode();
+    setStatus(publishStatus, `已保存 ${target.name}，Pages 正在重新构建。`, 'success');
+    await loadPosts();
+  } catch (error) {
+    const hint = error.status === 409 ? '（文章刚被修改过，请刷新列表后重新编辑）' : '';
+    setStatus(publishStatus, `${error.message}${hint}`, 'error');
+  }
+  finally { publishForm.inert = false; publishSubmit.disabled = false; }
 }
 
 async function connect() {
@@ -233,17 +393,25 @@ async function loadPosts() {
       const info = document.createElement('div');
       info.className = 'post-main';
       const name = document.createElement('strong');
-      name.textContent = post.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '').replace(/-/g, ' ');
+      const displayTitle = String(sessionTitles.get(post.name) || buildPostTitles.get(post.name) || '').trim();
+      name.textContent = displayTitle || post.name.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '').replace(/-/g, ' ');
+      name.title = post.name;
       const group = document.createElement('span');
       group.className = 'group-chip';
       group.textContent = groupFor(post.name);
       info.append(name, group);
       const date = document.createElement('time');
       date.textContent = post.name.slice(0, 10);
+      const actions = document.createElement('div');
+      actions.className = 'post-actions';
+      const editButton = document.createElement('button');
+      editButton.type = 'button'; editButton.className = 'quiet-button'; editButton.textContent = '编辑';
+      editButton.addEventListener('click', () => startEdit(post));
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'danger-button'; button.textContent = '删除';
       button.addEventListener('click', () => removePost(post, button));
-      row.append(info, date, button); postList.append(row);
+      actions.append(editButton, button);
+      row.append(info, date, actions); postList.append(row);
     });
     setStatus(postsStatus, `${posts.length} 篇文章`);
   } catch (error) { setStatus(postsStatus, error.message, 'error'); }
@@ -256,6 +424,8 @@ async function removePost(post, button) {
   try {
     await github(`/contents/${POSTS_PATH}/${encodeURIComponent(post.name)}`, { method: 'DELETE', body: JSON.stringify({ message: `Delete post ${post.name}`, sha: post.sha, branch: BRANCH }) });
     sessionGroups.delete(post.name);
+    sessionTitles.delete(post.name);
+    if (editing?.name === post.name) exitEditMode({ restore: false });
     await loadPosts();
     if (postsStatus.dataset.type !== 'error') setStatus(postsStatus, '已删除，主页将在 Pages 构建后更新。', 'success');
   } catch (error) { button.disabled = false; setStatus(postsStatus, error.message, 'error'); }
@@ -380,6 +550,12 @@ async function importDocument(file) {
 publishForm.addEventListener('submit', async event => {
   event.preventDefault();
   const values = Object.fromEntries(new FormData(publishForm));
+  values.title = String(values.title ?? '').trim();
+  values.summary = String(values.summary ?? '').trim();
+  values.group = String(values.group ?? '').trim();
+  if (!values.title) { setStatus(publishStatus, '请填写标题。', 'error'); return; }
+  if (!values.summary) { setStatus(publishStatus, '请填写摘要。', 'error'); return; }
+  if (editing) { await saveEdit(values); return; }
   const filename = postFile(values.title);
   const path = `${POSTS_PATH}/${encodeURIComponent(filename)}`;
   const content = frontMatter(values);
@@ -390,6 +566,7 @@ publishForm.addEventListener('submit', async event => {
     await github(`/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message: `Publish post ${values.title}`, content: encodeBase64(content), branch: BRANCH }) });
     const group = (values.group || '').trim();
     sessionGroups.set(filename, group || '未分组');
+    sessionTitles.set(filename, values.title);
     rememberGroup(group);
     await clearDraft().catch(() => { draftState.textContent = '已发布，本地草稿清除失败'; });
     setStatus(publishStatus, `已发布 ${filename}，Pages 正在重新构建。`, 'success');
@@ -399,6 +576,7 @@ publishForm.addEventListener('submit', async event => {
 });
 
 document.querySelector('#clear-draft').addEventListener('click', async () => {
+  if (editing) return;
   if (bodyField.value && !window.confirm('清空这篇未发布的草稿？')) return;
   publishForm.inert = true;
   try { await clearDraft(); }
@@ -406,13 +584,14 @@ document.querySelector('#clear-draft').addEventListener('click', async () => {
   finally { publishForm.inert = false; }
 });
 document.querySelector('#refresh-posts').addEventListener('click', loadPosts);
+cancelEditButton.addEventListener('click', () => exitEditMode());
 document.querySelector('#close-admin').addEventListener('click', () => { location.hash = '#notes'; });
 connectButton.addEventListener('click', connect);
 tokenInput.addEventListener('keydown', event => { if (event.key === 'Enter') connect(); });
 publishForm.addEventListener('input', event => {
   if (!event.target.name) return;
   if (event.target === bodyField) { rememberEditorSelection(); resizeBody(); }
-  queueDraftSave();
+  if (!editing) queueDraftSave();
 });
 function rememberEditorSelection() {
   editorSelection = { start: bodyField.selectionStart, end: bodyField.selectionEnd };
@@ -446,6 +625,7 @@ const manageLink = document.querySelector('.manage-link');
 const disconnectButton = document.querySelector('#disconnect');
 
 function disconnect() {
+  if (editing) exitEditMode({ restore: false });
   token = '';
   tokenInput.value = '';
   try { sessionStorage.removeItem(TOKEN_KEY); } catch {}

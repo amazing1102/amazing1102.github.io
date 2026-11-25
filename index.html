@@ -59,6 +59,7 @@ layout: base
         {% include post-manager.html %}
         <script type="application/json" id="post-paths">{{ site.posts | map: 'path' | jsonify }}</script>
         <script type="application/json" id="post-groups">{{ site.posts | map: 'group' | jsonify }}</script>
+        <script type="application/json" id="post-titles">{{ site.posts | map: 'title' | jsonify }}</script>
         <script type="module" src="{{ '/admin.js' | relative_url }}"></script>
       </section>
     </div>

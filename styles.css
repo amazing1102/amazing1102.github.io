@@ -166,8 +166,13 @@ nav a:hover::after {transform:scaleX(1)}
 #admin {margin-top:20px}
 .admin-bar {display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0 12px;border-bottom:1px solid var(--ink)}
 .admin-bar h2 {margin:0;font-size:22px;line-height:1.4;letter-spacing:-.01em}
-.admin-panel {margin-top:20px;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow)}
+.admin-panel {margin-top:20px;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);scroll-margin-top:90px}
 .admin-panel-heading {display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:19px;flex-wrap:wrap}
+.edit-bar {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:6px;background:var(--tint);font-size:13px}
+.edit-bar strong {font-family:var(--mono);font-size:12px;font-weight:600;word-break:break-all}
+.edit-bar .quiet-button {flex:none;background:var(--panel)}
+.post-actions {display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.quiet-button:disabled {opacity:.5;cursor:not-allowed}
 .admin-panel-heading>div {min-width:0;flex:1 1 16rem}
 .admin-panel-heading>button {flex:none;white-space:nowrap;margin-left:auto}
 .admin-panel h2 {font-size:20px}
@@ -215,6 +220,7 @@ nav a:hover::after {transform:scaleX(1)}
 @media(max-width:740px){
   .admin-bar {padding-top:18px}
   .admin-panel {padding:18px;border-radius:10px}
+  .edit-bar {align-items:flex-start;flex-direction:column;gap:8px}
   .form-grid {grid-template-columns:1fr}
   .group-row {max-width:none}
   .admin-post {grid-template-columns:minmax(0,1fr) auto}
